@@ -1,0 +1,176 @@
+<!--这是一个用jQuery实现的侧边栏（别的也可以），仅做参考-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>scroll</title>
+    <style>
+        html, body, ul{
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar-container{
+            position: fixed;
+            width: 300px;
+            height: 100%;
+            background-color: #d3d3d4;
+        }
+        .sidebar{
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+        li li{
+            list-style-position: inside;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar-container">
+    <ul class="sidebar">
+        <li>幼儿园
+            <ul>
+                <li>小班</li>
+                <li>中班</li>
+                <li>大班</li>
+            </ul>
+        </li>
+        <li>小学
+            <ul>
+                <li>一年级</li>
+                <li>二年级</li>
+                <li>三年级</li>
+                <li>四年级</li>
+                <li>五年级</li>
+                <li>六年级</li>
+            </ul>
+        </li>
+        <li>初中
+            <ul>
+                <li>初一</li>
+                <li>初二</li>
+                <li>初三</li>
+            </ul>
+        </li>
+        <li>高中
+            <ul>
+                <li>高一</li>
+                <li>高二</li>
+                <li>高三</li>
+            </ul>
+        </li>
+        <li>大学
+            <ul>
+                <li>大三</li>
+                <li>大二</li>
+                <li>大三</li>
+                <li>大四</li>
+            </ul>
+        </li>
+        <li>硕士
+            <ul>
+                <li>研一</li>
+                <li>研二</li>
+                <li>研三</li>
+            </ul>
+        </li>
+        <li>硕士
+            <ul>
+                <li>研一</li>
+                <li>研二</li>
+                <li>研三</li>
+            </ul>
+        </li>
+        <li>博士
+            <ul>
+                <li>博一</li>
+                <li>博二</li>
+                <li>博三</li>
+                <li>博四</li>
+                <li>博五</li>
+                <li>博六</li>
+                <li>哈哈哈</li>
+                <li>哈哈哈</li>
+                <li>哈哈哈</li>
+                <li>哈哈哈</li>
+                <li>哈哈哈</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+<script src="../jquery.js"></script>
+<script>
+    (function () {
+	    /*这段代码是从张鑫旭大大的文章摘得，谢谢大大，链接：http://www.zhangxinxu.com/wordpress/2013/04/js-mousewheel-dommousescroll-event/*/
+	    var addEvent = (function(window, undefined) {
+		    var _eventCompat = function(event) {
+			    var type = event.type;
+			    if (type == 'DOMMouseScroll' || type == 'mousewheel') {
+				    event.delta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
+			    }
+			    //alert(event.delta);
+			    if (event.srcElement && !event.target) {
+				    event.target = event.srcElement;
+			    }
+			    if (!event.preventDefault && event.returnValue !== undefined) {
+				    event.preventDefault = function() {
+					    event.returnValue = false;
+				    };
+			    }
+			    /*
+                   ......其他一些兼容性处理 */
+			    return event;
+		    };
+		    if (window.addEventListener) {
+			    return function(el, type, fn, capture) {
+				    if (type === "mousewheel" && document.mozFullScreen !== undefined) {
+					    type = "DOMMouseScroll";
+				    }
+				    el.addEventListener(type, function(event) {
+					    fn.call(this, _eventCompat(event));
+				    }, capture || false);
+			    }
+		    } else if (window.attachEvent) {
+			    return function(el, type, fn, capture) {
+				    el.attachEvent("on" + type, function(event) {
+					    event = event || window.event;
+					    fn.call(el, _eventCompat(event));
+				    });
+			    }
+		    }
+		    return function() {};
+	    })(window);
+	    /*感谢张鑫旭大大，链接：http://www.zhangxinxu.com/wordpress/2013/04/js-mousewheel-dommousescroll-event/*/
+
+	    var scrollNav = $('.sidebar');
+	    addEvent(scrollNav[0], "mousewheel", function(event) {
+		    var navTop = scrollNav.position().top;//这里是为元素不置顶时做的准备（比如有logo）
+		    console.log(navTop)
+		    var viewHeight = $(window).height();
+		    var navHeight = scrollNav.height();
+		    var dis = viewHeight - navHeight;
+		    //侧边栏没超出视框不作处理
+		    if(dis>0){
+			    return;
+		    }
+		    //往下滚动，底框显示就停止
+		    if (event.delta < 0 & (navTop+navHeight) > viewHeight) {
+			    navTop-=10;
+		    }
+		    //往上滚动，到达原始位置停止
+		    if(event.delta > 0 & navTop < 92){
+			    navTop+=15;
+		    }
+		    if(navTop>0){navTop = 0}
+		    scrollNav.css('top', navTop+'px')
+	    });
+    })();
+</script>
+</body>
+</html>
